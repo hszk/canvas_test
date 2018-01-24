@@ -2,7 +2,7 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8">
-    <title>Mouse座標取得</title>
+    <title>お絵かき</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
       html, body{
@@ -17,34 +17,17 @@
     </style>
   </head>
   <body>
-    <canvas width="320" height="240" id="mycanvas">
+    <canvas width="1000" height="800" id="mycanvas">
       Canvasに対応したブラウザを用意して下さい。
     </canvas>
     <div id="info"></div>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-
     <script>
       (function(){
         window.onload = function(){
+
+          //キャンパス要素を取得
           var canvas = document.getElementById('mycanvas');
-          if(!canvas || !canvas.getContext){
-            return false;
-          }
+          //二次元グラフィックスのコンテキストを取得
           var ctx = canvas.getContext('2d');
           //マウスの座標を取得
           var mouse = {
@@ -52,32 +35,24 @@
             startY: 0,
             x: 0,
             y: 0,
-            color: "black",
+            color: "blue",
             isDrawing: false
           };
-          var borderWidth = 1;
 
           canvas.addEventListener("mousemove", function(e){
 
-            //2.マウスが動いたら座標値を取得
+            //マウスが動いたら座標値を取得
+            /*
+             * rectでcanvasの絶対座標位置を取得し、
+             * クリック座標であるe.clientX,e.clientYからその分を引く
+             * ※クリック座標はdocumentからの位置を返すため
+             * ※rectはスクロール量によって値が変わるので、onClick()内でつど定義
+             */
         		var rect = e.target.getBoundingClientRect();
-        		mouse.x = e.clientX - rect.left - borderWidth;
-        		mouse.y = e.clientY - rect.top - borderWidth;
+        		mouse.x = e.clientX - rect.left;
+        		mouse.y = e.clientY - rect.top;
 
-            //3.情報をinfoに出力
-        		document.getElementById("info").innerHTML =
-            " clientX = " + Math.floor(e.clientX) + "px" +
-            " clientY = " + Math.floor(e.clientY) + "px" + '<br>' +
-            " rect.left = " + Math.floor(rect.left) + "px" +
-        		" rect.top = " + Math.floor(rect.top) + "px" + '<br><br>' +
-            " pageX = " + Math.floor(e.pageX) + "px" +
-            " pageY = " + Math.floor(e.pageY) + "px" + '<br>' +
-            ' offsetLeft = ' + Math.floor(canvas.offsetLeft) + "px" +
-            ' offsetTop = ' + Math.floor(canvas.offsetTop) + "px" + '<br><br>' +
-        		" canvas x座標 = " + Math.floor(mouse.x) + "px" +
-        		" canvas y座標 = " + Math.floor(mouse.y) + "px" + '<br>';
-
-            //4.isDrawがtrueのとき描画
+            //isDrawがtrueのとき描画
         		if (mouse.isDrawing){
         			ctx.beginPath();
         			ctx.moveTo(mouse.startX, mouse.startY);
@@ -89,14 +64,14 @@
         		}
           });
 
-          //5.マウスを押したら、描画OK(myDrawをtrue)
+          //マウスを押したら、描画OK(myDrawをtrue)
           canvas.addEventListener("mousedown", function(e){
             mouse.isDrawing = true;
             mouse.startX = mouse.x;
             mouse.startY = mouse.y;
           });
 
-          //6.マウスを上げたら、描画禁止(myDrawをfalse)
+          //マウスを上げたら、描画禁止(myDrawをfalse)
         	canvas.addEventListener("mouseup", function(e){
         		mouse.isDrawing = false;
         	});
